@@ -1,8 +1,12 @@
 import state from './state.js'
 import * as el from './elements.js'
 import { reset } from './actions.js'
+import { kitchenTimer } from './sounds.js'
+
 
 export function countdown() {
+    clearTimeout(state.countdownId)
+    
     if(!state.isRunning) {
         return
     }
@@ -19,16 +23,17 @@ export function countdown() {
 
     if (minutes < 0) {
         reset()
+        kitchenTimer.play()
         return
     }
 
     updateDisplay(minutes, seconds)
 
-    console.log('iniciou')
 
-    setTimeout(() => countdown(), 1000)
+    state.countdownId = setTimeout(() => countdown(), 1000)
 
 }
+
 
 
 export function updateDisplay(minutes, seconds) {
@@ -37,4 +42,5 @@ export function updateDisplay(minutes, seconds) {
 
     el.minutes.textContent = String(minutes).padStart(2, "0")
     el.seconds.textContent = String(seconds).padStart(2, "0")
+
 }
